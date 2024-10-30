@@ -469,15 +469,15 @@ class $modify(LevelPage) {
                             std::string value = "icon";
                             UnlockType unlockType;
                             int id = 1;
-                            if (achievementData->valueForKey("icon")->length() > 0) {
+                            if (strlen(achievementData->valueForKey("icon")->getCString()) > 0) {
                                 value = "icon";
                                 unlockType = UnlockType::Cube;
                             }
-                            if (achievementData->valueForKey("color")->length() > 0) {
+                            if (strlen(achievementData->valueForKey("color")->getCString()) > 0) {
                                 value = "color";
                                 unlockType = UnlockType::Col1;
                             }
-                            if (achievementData->valueForKey("color2")->length() > 0) {
+                            if (strlen(achievementData->valueForKey("color2")->getCString()) > 0) {
                                 value = "color2";
                                 unlockType = UnlockType::Col2;
                             }
@@ -524,15 +524,15 @@ class $modify(LevelPage) {
                             UnlockType unlockType;
                             int id = 1;
                             GJItemIcon* newIcon = GJItemIcon::create(UnlockType::Cube, 1, {175, 175, 175}, {255, 255, 255}, false, false, false, {255, 255, 255});
-                            if (achievementData->valueForKey("icon")->length() > 0) {
+                            if (strlen(achievementData->valueForKey("icon")->getCString()) > 0) {
                                 value = "icon";
                                 unlockType = UnlockType::Cube;
                             }
-                            if (achievementData->valueForKey("color")->length() > 0) {
+                            if (strlen(achievementData->valueForKey("color")->getCString()) > 0) {
                                 value = "color";
                                 unlockType = UnlockType::Col1;
                             }
-                            if (achievementData->valueForKey("color2")->length() > 0) {
+                            if (strlen(achievementData->valueForKey("color2")->getCString()) > 0) {
                                 value = "color2";
                                 unlockType = UnlockType::Col2;
                             }
