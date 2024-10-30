@@ -457,7 +457,7 @@ class $modify(LevelPage) {
         if (auto am = AchievementManager::sharedState()) {
             if (level->m_levelID.value() > 0) {
                 if (auto gm = GameManager::sharedState()) {
-                    if (auto achievementData = typeinfo_cast<CCDictionary*>(am->m_platformAchievements->objectForKey(achievementID1))) {
+                    if (auto achievementData = as<CCDictionary*>(am->m_platformAchievements->objectForKey(achievementID1))) {
                         auto achievementTitle = achievementData->valueForKey("title")->getCString();
                         if (GameStatsManager::sharedState()->getStat("8") < m_level->m_requiredCoins) {
                             achievementTitle = "???";
@@ -511,7 +511,7 @@ class $modify(LevelPage) {
                         m_fields->achievement1Icon->addChildAtPosition(lock, Anchor::Center);
                         m_fields->achievement1Icon->setOpacity(255);
                     }
-                    if (auto achievementData = typeinfo_cast<CCDictionary*>(am->m_platformAchievements->objectForKey(achievementID2))) {
+                    if (auto achievementData = as<CCDictionary*>(am->m_platformAchievements->objectForKey(achievementID2))) {
                         auto achievementTitle = achievementData->valueForKey("title")->getCString();
                         if (GameStatsManager::sharedState()->getStat("8") < m_level->m_requiredCoins) {
                             achievementTitle = "???";
