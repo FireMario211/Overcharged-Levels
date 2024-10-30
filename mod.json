@@ -1,0 +1,38 @@
+{
+	"geode": "3.8.1",
+	"gd": {
+		"win": "2.206",
+		"android": "2.206",
+		"mac": "2.206",
+		"ios": "2.206"
+	},
+	"id": "firee.overchargedlevels",
+	"name": "Overcharged Main Levels",
+	"version": "v1.0.0",
+	"developer": "Firee",
+	"description": "A revamp of the UI for the official main levels menu!",
+    "resources": {
+        "sprites": [
+            "resources/*.png"
+        ]
+    },
+    "links": {
+        "community": "https://discord.gg/XGBMVVvJ7J",
+        "source": "https://github.com/FireMario211/Overcharged-Levels"
+    },
+    "tags": ["interface", "offline", "modtober24"],
+    "settings": {
+        "enabled": {
+            "type": "bool",
+            "name": "Enabled",
+            "description": "Whether or not the mod should change the Main Levels menu.",
+            "default": true
+        },
+        "level-preview": {
+            "type": "bool",
+            "name": "Show Level Preview",
+            "description": "If the mod should show a preview of the level. Turn this off if you are experiencing lag.",
+            "default": true
+        }
+    }
+}
