@@ -4,6 +4,25 @@ using namespace geode::prelude;
 
 #include <Geode/modify/LevelPage.hpp>
 
+// for more difficulties
+class $modify(LevelPage) {
+    static void onModify(auto& self) {
+        if (Loader::get()->isModLoaded("uproxide.more_difficulties")) {
+            if (!self.setHookPriority("LevelPage::updateDynamicPage", 100000)) {
+                log::warn("Failed to set hook priority.");
+            }
+        }
+    }
+    void updateDynamicPage(GJGameLevel *p0) {
+        LevelPage::updateDynamicPage(p0);
+        if (Loader::get()->isModLoaded("uproxide.more_difficultiesa")) {
+            if (auto spr = typeinfo_cast<CCSprite*>(this->getChildByIDRecursive("uproxide.more_difficulties/more-difficulties-spr"))) {
+                spr->setPosition(m_difficultySprite->getPosition());
+            }
+        }
+    }
+};
+
 class $modify(LevelPage) {
     static void onModify(auto& self) {
         if (!self.setHookPriority("LevelPage::init", 0x8008135)) { // 0x100001, doggo suggested this for some reason
@@ -56,10 +75,13 @@ class $modify(LevelPage) {
         sprite->setContentSize(m_levelDisplay->getContentSize());
 
         m_levelDisplay->setPosition({m_levelDisplay->getContentSize() / 2});
-        auto playBtnDummy = CCMenuItemSpriteExtra::create(sprite, nullptr, this, menu_selector(LevelPage::onPlay));
-        playBtnDummy->m_scaleMultiplier = 1.1F;
-        playBtnDummy->setVisible(false); // just for accomodating node ids because IT CRASHES FOR SOME REASON
-        m_levelMenu->addChild(playBtnDummy); 
+        auto playBtnD = CCMenuItemSpriteExtra::create(sprite, nullptr, this, menu_selector(LevelPage::onPlay));
+        //playBtn->m_scaleMultiplier = 1.1F;
+        playBtnD->setEnabled(false);
+        //playBtnD->setVisible(false);
+        playBtnD->setAnchorPoint({0, 0});
+        //playBtnD->setPosition({winSize.width / 2, (winSize.height / 2) + 50.F});
+        m_levelMenu->addChild(playBtnD);
         auto playSpr = CCSprite::createWithSpriteFrameName("GJ_playBtn2_001.png");
         playSpr->setScale(0.45F);
         auto playBtn = CCMenuItemSpriteExtra::create(playSpr, this, menu_selector(LevelPage::onPlay));
@@ -70,9 +92,14 @@ class $modify(LevelPage) {
             LevelPage::onPlay(sender);
         });
 
-        playBtn->setPosition({43, 50});
-        practiceBtn->setPosition({92, 50});
-        m_levelMenu->addChild(sprite); 
+        if (Loader::get()->isModLoaded("dankmeme.globed2")) {
+            playBtn->setPosition({43, 40});
+            practiceBtn->setPosition({92, 40});
+        } else {
+            playBtn->setPosition({43, 50});
+            practiceBtn->setPosition({92, 50});
+        }
+        //m_levelMenu->addChild(sprite); 
         m_levelMenu->addChild(playBtn); 
         m_levelMenu->addChild(practiceBtn); 
         m_progressObjects->addObject(m_levelMenu);
@@ -152,6 +179,7 @@ class $modify(LevelPage) {
 
         m_difficultySprite = CCSprite::createWithSpriteFrameName("diffIcon_01_btn_001.png"); // GJDifficultySprite
         m_difficultySprite->setScale(0.9F);
+        m_difficultySprite->setID("difficulty-sprite");
         m_levelDisplay->addChildAtPosition(m_difficultySprite, Anchor::Center, {0, 30});
         m_levelObjects->addObject(m_difficultySprite);
 
@@ -395,6 +423,15 @@ class $modify(LevelPage) {
             difficulty = 6;
         }
         m_difficultySprite->setDisplayFrame(GJDifficultySprite::create(difficulty, GJDifficultyName::Short)->displayFrame());
+        if (Loader::get()->isModLoaded("uproxide.more_difficulties")) {
+            if (auto spr = typeinfo_cast<CCSprite*>(this->getChildByIDRecursive("uproxide.more_difficulties/more-difficulties-spr"))) {
+                spr->setPosition({m_difficultySprite->getPositionX(), m_difficultySprite->getPositionY() - 5.F});
+                spr->setScale(1.F);
+                m_difficultySprite->setVisible(false);
+            }
+        } else {
+            m_difficultySprite->setVisible(true);
+        }
         m_fields->m_textArea->setString(m_nameLabel->getString());
         m_nameLabel->setVisible(false);
         m_fields->m_textArea->setScale(Utils::calculateScale(strlen(m_nameLabel->getString()), 7, 15, 0.75F, 0.4F));

@@ -1,5 +1,5 @@
 {
-	"geode": "3.8.1",
+	"geode": "3.9.0",
 	"gd": {
 		"win": "2.206",
 		"android": "2.206",
@@ -8,7 +8,7 @@
 	},
 	"id": "firee.overchargedlevels",
 	"name": "Overcharged Main Levels",
-	"version": "v1.0.0",
+	"version": "v1.0.1",
 	"developer": "Firee",
 	"description": "A revamp of the UI for the official main levels menu!",
     "resources": {
@@ -34,5 +34,12 @@
             "description": "If the mod should show a preview of the level. Turn this off if you are experiencing lag.",
             "default": true
         }
-    }
+    },
+    "incompatibilities": [
+		{
+			"id": "naxrin.progress_bar_color",
+			"version": "*",
+			"importance": "breaking"
+  		}
+  	]
 }

@@ -12,7 +12,7 @@ class $modify(BoomScrollLayer) {
             Loader::get()->queueInMainThread([this, p1, p2, p3]() {
                 if (auto LSL = typeinfo_cast<LevelSelectLayer*>(this->getParent())) {
                     this->unschedule(schedule_selector(BoomScrollLayer::updateDots));
-                    if (auto batch = getChildOfType<CCSpriteBatchNode>(this, 0)) {
+                    if (auto batch = this->getChildByType<CCSpriteBatchNode>(0)) {
                         batch->removeMeAndCleanup();
                         auto node = CCNode::create();
                         m_dots->removeAllObjects();
