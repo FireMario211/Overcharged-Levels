@@ -67,3 +67,4 @@ other/
 
 build-linux
 compile_commands.json
+build.sh

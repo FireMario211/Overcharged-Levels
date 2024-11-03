@@ -23,6 +23,21 @@ class $modify(LevelPage) {
     }
 };
 
+/*
+"revamp-ui": {
+            "type": "bool",
+            "name": "UI Revamp",
+            "description": "Whether or not the mod should revamp the UI. Turn this off only if you want the other settings.",
+            "default": true
+        },
+        "level-preview": {
+            "type": "bool",
+            "name": "Show Level Preview",
+            "description": "If the mod should show a preview of the level. Turn this off if you are experiencing lag.",
+            "default": true
+        }
+*/
+
 class $modify(LevelPage) {
     static void onModify(auto& self) {
         if (!self.setHookPriority("LevelPage::init", 0x8008135)) { // 0x100001, doggo suggested this for some reason
@@ -121,6 +136,7 @@ class $modify(LevelPage) {
         m_normalProgressBar->setScaleX(0.992F);
         m_normalProgressBar->setScaleY(0.825F);
         m_normalProgressBar->setColor({0,255,0});
+        m_normalProgressBar->setID("normal-progress-bar");
         m_progressWidth = m_normalProgressBar->getTextureRect().size.width;
         normProgressBar->addChild(m_normalProgressBar, 1);
         m_normalProgressBar->setAnchorPoint({0, 0.5});
@@ -138,6 +154,7 @@ class $modify(LevelPage) {
         m_practiceProgressBar->setScaleX(0.992F);
         m_practiceProgressBar->setScaleY(0.825F);
         m_practiceProgressBar->setColor({0,255,255});
+        m_practiceProgressBar->setID("practice-progress-bar");
         practProgressBar->addChild(m_practiceProgressBar, 1);
         m_practiceProgressBar->setAnchorPoint({0, 0.5});
         m_practiceProgressBar->setPosition({m_normalProgressBar->getPositionX(), practProgressBar->getContentHeight() / 2});
@@ -472,22 +489,22 @@ class $modify(LevelPage) {
         if (Loader::get()->isModLoaded("bitz.moregames")) {
              switch (levelID) {
                 case 1001:
-                    achievementID1 = "geometry.ach.mdcoin01";
+                    achievementID2 = "geometry.ach.mdcoin01";
                     break;
                 case 1002:
-                    achievementID1 = "geometry.ach.mdcoin02";
+                    achievementID2 = "geometry.ach.mdcoin02";
                     break;
                 case 1003:
-                    achievementID1 = "geometry.ach.mdcoin03";
+                    achievementID2 = "geometry.ach.mdcoin03";
                     break;
                 case 4001:
-                    achievementID1 = "geometry.ach.subzero.coins001";
+                    achievementID2 = "geometry.ach.subzero.coins001";
                     break;
                 case 4002:
-                    achievementID1 = "geometry.ach.subzero.coins002";
+                    achievementID2 = "geometry.ach.subzero.coins002";
                     break;
                 case 4003:
-                    achievementID1 = "geometry.ach.subzero.coins003";
+                    achievementID2 = "geometry.ach.subzero.coins003";
                     break;
              }
         }
@@ -525,6 +542,18 @@ class $modify(LevelPage) {
                                 value = cString.substr(0, pos);;
                                 if (value == "icon") {
                                     unlockType = UnlockType::Cube;
+                                } else if (value == "ship") {
+                                    unlockType = UnlockType::Ship;
+                                } else if (value == "ball") {
+                                    unlockType = UnlockType::Ball;
+                                } else if (value == "dart") {
+                                    unlockType = UnlockType::Dart;
+                                } else if (value == "robot") {
+                                    unlockType = UnlockType::Robot;
+                                } else if (value == "spider") {
+                                    unlockType = UnlockType::Spider;
+                                } else if (value == "swing") {
+                                    unlockType = UnlockType::Swing;
                                 } else if (value == "color") {
                                     unlockType = UnlockType::Col1;
                                 } else if (value == "color2") {
@@ -580,6 +609,18 @@ class $modify(LevelPage) {
                                 value = cString.substr(0, pos);;
                                 if (value == "icon") {
                                     unlockType = UnlockType::Cube;
+                                } else if (value == "ship") {
+                                    unlockType = UnlockType::Ship;
+                                } else if (value == "ball") {
+                                    unlockType = UnlockType::Ball;
+                                } else if (value == "dart") {
+                                    unlockType = UnlockType::Dart;
+                                } else if (value == "robot") {
+                                    unlockType = UnlockType::Robot;
+                                } else if (value == "spider") {
+                                    unlockType = UnlockType::Spider;
+                                } else if (value == "swing") {
+                                    unlockType = UnlockType::Swing;
                                 } else if (value == "color") {
                                     unlockType = UnlockType::Col1;
                                 } else if (value == "color2") {
@@ -627,18 +668,12 @@ class $modify(LevelPage) {
             } else {
                 if (auto label = typeinfo_cast<CCLabelBMFont*>(obj)) {
                     if (didLabel || !strcmp(label->getString(), "Coming Soon!")) continue;
-                    //label->setAnchorPoint({0.5, 0.5});
-                    //label->setScale(0.3F);
-                    //label->setPosition({55, 87});
                     label->setPositionX(110);
                     label->setAnchorPoint({1.0, 0.5});
                     didLabel = true;
                 }
                 if (auto sprite = typeinfo_cast<CCSprite*>(obj)) {
                     if (didSprite || m_secretDoor == sprite) continue;
-                    //sprite->setScale(0.4F);
-                    //sprite->setPosition({81, 87});
-                    //sprite->setAnchorPoint({0, 0.5});
                     sprite->setPositionX(122);
                     didSprite = true;
                 }
