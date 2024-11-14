@@ -1,3 +1,5 @@
+# 1.1.1
+- Update Geode to v4.0.0-alpha.1
 # 1.1.0
 - Added new settings
 - Fix inaccurate icon achievements

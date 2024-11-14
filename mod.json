@@ -1,14 +1,14 @@
 {
-	"geode": "3.9.0",
+	"geode": "4.0.0-alpha.1",
 	"gd": {
-		"win": "2.206",
-		"android": "2.206",
-		"mac": "2.206",
-		"ios": "2.206"
+		"win": "2.2074",
+		"android": "2.2074",
+		"mac": "2.2074",
+		"ios": "2.2074"
 	},
 	"id": "firee.overchargedlevels",
 	"name": "Overcharged Main Levels",
-	"version": "v1.1.0",
+	"version": "v1.1.1",
 	"developer": "Firee",
 	"description": "A revamp of the UI for the official main levels menu!",
     "resources": {
