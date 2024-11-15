@@ -4,25 +4,6 @@ using namespace geode::prelude;
 
 #include <Geode/modify/LevelPage.hpp>
 
-// for more difficulties
-class $modify(LevelPage) {
-    static void onModify(auto& self) {
-        if (Loader::get()->isModLoaded("uproxide.more_difficulties")) {
-            if (!self.setHookPriority("LevelPage::updateDynamicPage", 100000)) {
-                log::warn("Failed to set hook priority.");
-            }
-        }
-    }
-    void updateDynamicPage(GJGameLevel *p0) {
-        LevelPage::updateDynamicPage(p0);
-        if (Loader::get()->isModLoaded("uproxide.more_difficultiesa")) {
-            if (auto spr = typeinfo_cast<CCSprite*>(this->getChildByIDRecursive("uproxide.more_difficulties/more-difficulties-spr"))) {
-                spr->setPosition(m_difficultySprite->getPosition());
-            }
-        }
-    }
-};
-
 /*
 "revamp-ui": {
             "type": "bool",
@@ -42,6 +23,11 @@ class $modify(LevelPage) {
     static void onModify(auto& self) {
         if (!self.setHookPriority("LevelPage::init", 0x8008135)) { // 0x100001, doggo suggested this for some reason
             log::warn("Failed to set hook priority.");
+        }
+        if (Loader::get()->isModLoaded("uproxide.more_difficulties")) {
+            if (!self.setHookPriority("LevelPage::updateDynamicPage", 100000)) {
+                log::warn("Failed to set hook priority.");
+            }
         }
     }
     struct Fields {
@@ -166,24 +152,28 @@ class $modify(LevelPage) {
         //this->addChild(CCLabelBMFont::create(" ", "bigFont.fnt")); // i love node ids
 
         m_normalProgressLabel = CCLabelBMFont::create(" ","bigFont.fnt");
+        m_normalProgressLabel->setID("normal-progress-label");
         progressDisplay->addChild(m_normalProgressLabel, 4);
         m_normalProgressLabel->setPosition(normProgressBar->getPosition());
         m_normalProgressLabel->setScale(0.35F);
         m_progressObjects->addObject(m_normalProgressLabel);
 
         m_practiceProgressLabel = CCLabelBMFont::create(" ","bigFont.fnt");
+        m_practiceProgressLabel->setID("practice-progress-label");
         progressDisplay->addChild(m_practiceProgressLabel, 4);
         m_practiceProgressLabel->setPosition(practProgressBar->getPosition());
         m_practiceProgressLabel->setScale(0.35F);
         m_progressObjects->addObject(m_practiceProgressLabel);
 
         auto normalModeLbl = CCLabelBMFont::create("Normal Mode", "bigFont.fnt");
+        normalModeLbl->setID("normal-mode-label");
         progressDisplay->addChild(normalModeLbl, 4);
         normalModeLbl->setPosition({normProgressBar->getPositionX(), normProgressBar->getPositionY() + 13.F}); // 56
         normalModeLbl->setScale(0.315F);
         m_progressObjects->addObject(normalModeLbl);
 
         auto practiceModeLbl = CCLabelBMFont::create("Practice Mode", "bigFont.fnt");
+        practiceModeLbl->setID("practice-mode-label");
         progressDisplay->addChild(practiceModeLbl, 4);
         practiceModeLbl->setPosition({practProgressBar->getPositionX(), practProgressBar->getPositionY() + 13.F});
         practiceModeLbl->setScale(0.315F);
@@ -442,7 +432,7 @@ class $modify(LevelPage) {
         m_difficultySprite->setDisplayFrame(GJDifficultySprite::create(difficulty, GJDifficultyName::Short)->displayFrame());
         if (Loader::get()->isModLoaded("uproxide.more_difficulties")) {
             if (auto spr = typeinfo_cast<CCSprite*>(this->getChildByIDRecursive("uproxide.more_difficulties/more-difficulties-spr"))) {
-                spr->setPosition({m_difficultySprite->getPositionX(), m_difficultySprite->getPositionY() - 5.F});
+                spr->setPosition({spr->getPositionX(), m_difficultySprite->getPositionY() - 5.F});
                 spr->setScale(1.F);
                 m_difficultySprite->setVisible(false);
             }
