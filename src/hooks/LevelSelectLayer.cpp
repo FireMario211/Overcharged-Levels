@@ -17,6 +17,8 @@ class $modify(LevelSelectLayer) {
             levelsArray->addObject(level);
             iVar20 = iVar19;
         } while (iVar19 != 23);*/
+
+       
         m_groundLayer->setPositionY(35);
         return true;
     }
