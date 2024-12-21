@@ -49,6 +49,9 @@ class $modify(OLBoomScrollLayer, BoomScrollLayer) {
                 }
             });
         }
+
+
+        
         return true;
     }
     void goToPage(CCObject* sender) {

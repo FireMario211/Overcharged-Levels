@@ -1,3 +1,5 @@
+# 1.1.3
+- Added MoreGames Support
 # 1.1.2 
 - Update Geode to v4.0.0-beta.1
 - Add IDs to percent labels and text labels

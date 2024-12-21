@@ -37,7 +37,13 @@ class $modify(LevelPage) {
         CCSprite* achievement1Icon;
         CCSprite* achievement2Icon;
         CCSprite* levelBG;
+
+        CCScale9Sprite* achievement2Display; //1st achivement display
+
+        TextArea* m_textArea1Desc;   //1st achievement label
+        TextArea* m_textAreaDesc;  //2st achievement label
     };
+
     // a recreation* of LevelPage::init
     bool init(GJGameLevel* level) { // haha level isnt even used! but erm what is the point of level if its never used???
         if (!Mod::get()->getSettingValue<bool>("enabled")) return LevelPage::init(level);
@@ -50,6 +56,8 @@ class $modify(LevelPage) {
         }*/
         if (!CCLayer::init()) return false;
 
+
+       
         // i only now realized calloc already did this... i wasted like 2+ hours reversing this, great!
         auto winSize = CCDirector::sharedDirector()->getWinSize();
         m_progressObjects = CCArray::create();
@@ -257,10 +265,10 @@ class $modify(LevelPage) {
             m_fields->achievement1Title = CCLabelBMFont::create(" ", "goldFont.fnt");
             m_fields->achievement1Title->setScale(0.575F);
             m_fields->achievement1Title->setAnchorPoint({0, 0.5});
-            auto achievement1Desc = TextArea::create("Complete This Level In Practice Mode", "bigFont.fnt", 0.4F, 200.F, {0, 0.5}, 15.F, true);
-            achievement1Desc->setAnchorPoint({0, 0.5});
+            m_fields->m_textArea1Desc = TextArea::create("Complete This Level In Practice Mode", "bigFont.fnt", 0.4F, 200.F, {0, 0.5}, 15.F, true);
+            m_fields->m_textArea1Desc->setAnchorPoint({0, 0.5});
             achievement1Display->addChildAtPosition(m_fields->achievement1Title, Anchor::TopLeft, {9, -11});
-            achievement1Display->addChildAtPosition(achievement1Desc, Anchor::Left, {9, 2});
+            achievement1Display->addChildAtPosition(m_fields->m_textArea1Desc, Anchor::Left, {9, 2});
             auto lock = CCSprite::createWithSpriteFrameName("GJ_lock_001.png");
             m_fields->achievement1Icon = CCSprite::createWithSpriteFrameName("playerSquare_001.png");
             m_fields->achievement1Icon->setColor({175,175,175});
@@ -271,26 +279,30 @@ class $modify(LevelPage) {
             achievement1Display->addChildAtPosition(m_fields->achievement1Icon, Anchor::Right, {-25, 0});
 
 
-            auto achievement2Display = CCScale9Sprite::create("square02_001.png", {0, 0, 80, 80});
-            achievement2Display->setOpacity(75);
-            achievement2Display->setContentSize({300.F, 55.F});
-            achievement2Display->setScale(0.8F);
-            achievementDisplay->addChildAtPosition(achievement2Display, Anchor::Center, {0, -32});
+            m_fields->achievement2Display = CCScale9Sprite::create("square02_001.png", {0, 0, 80, 80});
+            m_fields->achievement2Display->setOpacity(75);
+            m_fields->achievement2Display->setContentSize({300.F, 55.F});
+            m_fields->achievement2Display->setScale(0.8F);
+            achievementDisplay->addChildAtPosition(m_fields->achievement2Display, Anchor::Center, {0, -32});
 
             m_fields->achievement2Title = CCLabelBMFont::create(" ", "goldFont.fnt");
             m_fields->achievement2Title->setScale(0.575F);
             m_fields->achievement2Title->setAnchorPoint({0, 0.5});
-            auto achievement2Desc = TextArea::create("Complete This Level In Normal Mode", "bigFont.fnt", 0.4F, 200.F, {0, 0.5}, 15.F, true);
-            achievement2Desc->setAnchorPoint({0, 0.5});
-            achievement2Display->addChildAtPosition(m_fields->achievement2Title, Anchor::TopLeft, {9, -11});
-            achievement2Display->addChildAtPosition(achievement2Desc, Anchor::Left, {9, 2});
+
+            m_fields->m_textAreaDesc = TextArea::create("Complete This Level In Normal Mode", "bigFont.fnt", 0.4F, 200.F, { 0, 0.5 }, 15.F, true);
+            m_fields->m_textAreaDesc->setAnchorPoint({0, 0.5});
+            m_fields->achievement2Display->addChildAtPosition(m_fields->achievement2Title, Anchor::TopLeft, {9, -11});
+
+          
+           
+            m_fields->achievement2Display->addChildAtPosition(m_fields->m_textAreaDesc, Anchor::Left, {9, 2});
 
             m_fields->achievement2Icon = CCSprite::createWithSpriteFrameName("playerSquare_001.png");
             m_fields->achievement2Icon->setColor({175,175,175});
             m_fields->achievement2Icon->addChild(lock);
             m_fields->achievement2Icon->setScale(0.9F);
             m_fields->achievement2Icon->setAnchorPoint({0.5, 0.5});
-            achievement2Display->addChildAtPosition(m_fields->achievement2Icon, Anchor::Right, {-25, 0});
+            m_fields->achievement2Display->addChildAtPosition(m_fields->achievement2Icon, Anchor::Right, {-25, 0});
         }
 
         // i really just wasted hours doing this
@@ -444,7 +456,9 @@ class $modify(LevelPage) {
         m_fields->m_textArea->setScale(Utils::calculateScale(strlen(m_nameLabel->getString()), 7, 15, 0.75F, 0.4F));
 
         int levelID = level->m_levelID.value();
-        if (levelID <= 22 && levelID > 0 && Mod::get()->getSettingValue<bool>("level-preview")) {
+        if ((levelID <= 22) ||
+            (levelID >= 1001 && levelID <= 1003) ||
+            (levelID >= 4001 && levelID <= 4003) && levelID > 0 && Mod::get()->getSettingValue<bool>("level-preview")) {
             m_fields->levelBG->removeAllChildrenWithCleanup(true);
 
             std::string spriteName = fmt::format("{}.png"_spr, levelID);
@@ -473,30 +487,64 @@ class $modify(LevelPage) {
             }
 
         }
-
+       
         auto achievementID1 = fmt::format("geometry.ach.level{:02}a", levelID);
         auto achievementID2 = fmt::format("geometry.ach.level{:02}b", levelID);
         if (Loader::get()->isModLoaded("bitz.moregames")) {
+     
              switch (levelID) {
                 case 1001:
-                    achievementID2 = "geometry.ach.mdcoin01";
+                    m_fields->m_textArea1Desc->setString("Complete This Level In Normal Mode");
+                    m_fields->m_textAreaDesc->setString("Collect all 3 Secret Coins on 'The Seven Seas'");
+                    
+     
+                    achievementID1 = "geometry.ach.mdlevel01b"; //Normal Mode achievement
+                  
+                    achievementID2 = "geometry.ach.mdcoin01"; //3 Coins achievement
                     break;
                 case 1002:
-                    achievementID2 = "geometry.ach.mdcoin02";
+                    m_fields->m_textArea1Desc->setString("Complete This Level In Normal Mode"); //1st achievement label
+                    m_fields->m_textAreaDesc->setString("Collect all 3 Secret Coins on 'Viking Arena'"); //2st achievement label
+                    
+                    achievementID1 = "geometry.ach.mdlevel02b"; //Normal Mode achievement
+
+                    achievementID2 = "geometry.ach.mdcoin02"; //3 Coins achievement
                     break;
                 case 1003:
-                    achievementID2 = "geometry.ach.mdcoin03";
+                    m_fields->m_textArea1Desc->setString("Complete This Level In Normal Mode"); //1st achievement label
+                    m_fields->m_textAreaDesc->setString("Collect all 3 Secret Coins on 'Airborne Robots'");  //2st achievement label
+
+                    achievementID1 = "geometry.ach.mdlevel03b"; //Normal Mode achievement
+
+                    achievementID2 = "geometry.ach.mdcoin03"; //3 Coins achievement
                     break;
                 case 4001:
-                    achievementID2 = "geometry.ach.subzero.coins001";
+                    m_fields->m_textArea1Desc->setString("Complete This Level In Normal Mode"); //1st achievement label
+                    m_fields->m_textAreaDesc->setString("Collect all 3 Secret Coins on 'Press Start'");  //2st achievement label
+                   
+                    achievementID1 = "geometry.ach.subzero.level001"; //Normal Mode achievement
+
+                    achievementID2 = "geometry.ach.subzero.coins001"; //3 Coins achievement
                     break;
                 case 4002:
-                    achievementID2 = "geometry.ach.subzero.coins002";
+                    m_fields->m_textArea1Desc->setString("Complete This Level In Normal Mode"); //1st achievement label
+                    m_fields->m_textAreaDesc->setString("Collect all 3 Secret Coins on 'Nock Em'");  //2st achievement label
+                    
+                    achievementID1 = "geometry.ach.subzero.level002"; //Normal Mode achievement
+
+                    achievementID2 = "geometry.ach.subzero.coins002"; //3 Coins achievement
                     break;
                 case 4003:
-                    achievementID2 = "geometry.ach.subzero.coins003";
+                    m_fields->m_textArea1Desc->setString("Complete This Level In Normal Mode"); //1st achievement label
+                    m_fields->m_textAreaDesc->setString("Collect all 3 Secret Coins on 'Power Trip'");  //2st achievement label
+                    
+                    achievementID1 = "geometry.ach.subzero.level003"; //Normal Mode achievement
+
+                    achievementID2 = "geometry.ach.subzero.coins003"; //3 Coins achievement
                     break;
              }
+
+          
         }
         if (auto am = AchievementManager::sharedState()) {
             if (level->m_levelID.value() > 0) {
