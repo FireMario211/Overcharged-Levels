@@ -1,3 +1,5 @@
+# 1.2.0 
+- Added horizontal preview support (disable Overcharged in settings for that)
 # 1.1.3
 - Added MoreGames Support
 # 1.1.2 

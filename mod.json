@@ -1,5 +1,5 @@
 {
-	"geode": "4.1.1",
+	"geode": "4.2.0",
 	"gd": {
 		"win": "2.2074",
 		"android": "2.2074",
@@ -8,12 +8,13 @@
 	},
 	"id": "firee.overchargedlevels",
 	"name": "Overcharged Main Levels",
-	"version": "v1.1.3",
+	"version": "v1.2.0",
 	"developer": "Firee",
 	"description": "A revamp of the UI for the official main levels menu!",
     "resources": {
         "sprites": [
-            "resources/*.png"
+            "resources/vertical/*.png",
+            "resources/horizontal/*.png"
         ]
     },
     "links": {
@@ -26,6 +27,12 @@
             "type": "bool",
             "name": "Enabled",
             "description": "Whether or not the mod should change the Main Levels menu.",
+            "default": true
+        },
+        "overcharge-menu": {
+            "type": "bool",
+            "name": "Overcharge Menu",
+            "description": "If the mod should revamp the look for the Main Levels menu. Turning this off won't disable features such as level preview or page icons.",
             "default": true
         },
         "level-preview": {

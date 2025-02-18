@@ -58,6 +58,7 @@ class $modify(OLBoomScrollLayer, BoomScrollLayer) {
         if (auto menuItem = as<CCMenuItemSpriteExtra*>(sender)) {
             quickUpdate();
             moveToPage(menuItem->getTag());
+            quickUpdate();
         }
     }
 };

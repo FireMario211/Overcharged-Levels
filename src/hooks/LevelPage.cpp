@@ -43,10 +43,45 @@ class $modify(LevelPage) {
         TextArea* m_textArea1Desc;   //1st achievement label
         TextArea* m_textAreaDesc;  //2st achievement label
     };
+    void createClippingNode() {
+        auto clippingNode = CCClippingNode::create();
+        clippingNode->setContentSize(m_levelDisplaySize);
+        clippingNode->setAnchorPoint({0.5, 0.5});
 
+        auto mask2 = CCScale9Sprite::create("square02_001.png", {0, 0, 80, 80});
+        mask2->setAnchorPoint({0.5, 0.5});
+        mask2->setContentSize(m_levelDisplay->getContentSize());
+        //mask2->setPosition({winSize.width / 2, (winSize.height / 2) + 50.F});
+        clippingNode->setStencil(mask2);
+        clippingNode->setAlphaThreshold(0.05f);
+
+        m_fields->levelBG = CCSprite::create();
+        m_fields->levelBG->setScale(1.25F);//1.05F);
+        m_fields->levelBG->setOpacity(150);
+        //m_levelDisplay->addChildAtPosition(m_fields->levelBG, Anchor::Center);
+        clippingNode->addChildAtPosition(m_fields->levelBG, Anchor::BottomLeft);
+        m_levelDisplay->addChildAtPosition(clippingNode, Anchor::Center);
+        clippingNode->setZOrder(-1);
+
+        m_levelDisplay->updateLayout();
+        clippingNode->setAnchorPoint({0, 0});
+
+
+        auto moveAround = CCSequence::create(
+            CCEaseInOut::create(CCMoveBy::create(1.5f, ccp(0, 3)), 2.0f),
+            CCEaseInOut::create(CCMoveBy::create(1.5f, ccp(0, -3)), 2.0f),
+            nullptr
+        );
+        m_fields->levelBG->runAction(CCRepeatForever::create(moveAround));
+    }
     // a recreation* of LevelPage::init
     bool init(GJGameLevel* level) { // haha level isnt even used! but erm what is the point of level if its never used???
         if (!Mod::get()->getSettingValue<bool>("enabled")) return LevelPage::init(level);
+        if (!Mod::get()->getSettingValue<bool>("overcharge-menu")) {
+            if (!LevelPage::init(level)) return false;
+            createClippingNode();
+            return true;
+        }
         /*if (Loader::get()->isModLoaded("user95401.mainlevelseditora")) {
             Loader::get()->queueInMainThread([]() {
                 FLAlertLayer::create("Main Levels Editor mod detected!", "<cg>Main Levels Editor</c> is not supported and will probably crash for this mod.\nPlease turn off the mod in order to continue using <cy>Mod Name</c>.", "OK")->show();
@@ -56,8 +91,6 @@ class $modify(LevelPage) {
         }*/
         if (!CCLayer::init()) return false;
 
-
-       
         // i only now realized calloc already did this... i wasted like 2+ hours reversing this, great!
         auto winSize = CCDirector::sharedDirector()->getWinSize();
         m_progressObjects = CCArray::create();
@@ -397,63 +430,37 @@ class $modify(LevelPage) {
 
         //CCLayerColor* mask = CCLayerColor::create({255, 255, 255});
         //mask->setContentSize(m_levelDisplaySize);
-        auto clippingNode = CCClippingNode::create();
-        clippingNode->setContentSize(m_levelDisplaySize);
-        clippingNode->setAnchorPoint({0.5, 0.5});
-
-        auto mask2 = CCScale9Sprite::create("square02_001.png", {0, 0, 80, 80});
-        mask2->setAnchorPoint({0.5, 0.5});
-        mask2->setContentSize(m_levelDisplay->getContentSize());
-        //mask2->setPosition({winSize.width / 2, (winSize.height / 2) + 50.F});
-        clippingNode->setStencil(mask2);
-        clippingNode->setAlphaThreshold(0.05f);
-
-        m_fields->levelBG = CCSprite::create();
-        m_fields->levelBG->setScale(1.25F);//1.05F);
-        m_fields->levelBG->setOpacity(150);
-        //m_levelDisplay->addChildAtPosition(m_fields->levelBG, Anchor::Center);
-        clippingNode->addChildAtPosition(m_fields->levelBG, Anchor::BottomLeft);
-        m_levelDisplay->addChildAtPosition(clippingNode, Anchor::Center);
-        clippingNode->setZOrder(-1);
-
-        m_levelDisplay->updateLayout();
-        clippingNode->setAnchorPoint({0, 0});
-
-
-        auto moveAround = CCSequence::create(
-            CCEaseInOut::create(CCMoveBy::create(1.5f, ccp(0, 3)), 2.0f),
-            CCEaseInOut::create(CCMoveBy::create(1.5f, ccp(0, -3)), 2.0f),
-            nullptr
-        );
-        m_fields->levelBG->runAction(CCRepeatForever::create(moveAround));
-
+        createClippingNode();
 		return true;
     }
     void updateDynamicPage(GJGameLevel* level) {
         LevelPage::updateDynamicPage(level);
         if (!Mod::get()->getSettingValue<bool>("enabled")) return;
+        bool willOvercharge = Mod::get()->getSettingValue<bool>("overcharge-menu");
         /*if (auto llm = LocalLevelManager::sharedState()) { // haha get it
             level->m_levelString = llm->getMainLevelString(level->m_levelID.value());
         }*/
-        int difficulty = static_cast<int>(level->m_difficulty);
-        if (difficulty < 1) {
-            difficulty = 1;
-        } else if (difficulty > 6) {
-            difficulty = 6;
-        }
-        m_difficultySprite->setDisplayFrame(GJDifficultySprite::create(difficulty, GJDifficultyName::Short)->displayFrame());
-        if (Loader::get()->isModLoaded("uproxide.more_difficulties")) {
-            if (auto spr = typeinfo_cast<CCSprite*>(this->getChildByIDRecursive("uproxide.more_difficulties/more-difficulties-spr"))) {
-                spr->setPosition({spr->getPositionX(), m_difficultySprite->getPositionY() - 5.F});
-                spr->setScale(1.F);
-                m_difficultySprite->setVisible(false);
+        if (willOvercharge) {
+            int difficulty = static_cast<int>(level->m_difficulty);
+            if (difficulty < 1) {
+                difficulty = 1;
+            } else if (difficulty > 6) {
+                difficulty = 6;
             }
-        } else {
-            m_difficultySprite->setVisible(true);
+            m_difficultySprite->setDisplayFrame(GJDifficultySprite::create(difficulty, GJDifficultyName::Short)->displayFrame());
+            if (Loader::get()->isModLoaded("uproxide.more_difficulties")) {
+                if (auto spr = typeinfo_cast<CCSprite*>(this->getChildByIDRecursive("uproxide.more_difficulties/more-difficulties-spr"))) {
+                    spr->setPosition({spr->getPositionX(), m_difficultySprite->getPositionY() - 5.F});
+                    spr->setScale(1.F);
+                    m_difficultySprite->setVisible(false);
+                }
+            } else {
+                m_difficultySprite->setVisible(true);
+            }
+            m_fields->m_textArea->setString(m_nameLabel->getString());
+            m_nameLabel->setVisible(false);
+            m_fields->m_textArea->setScale(Utils::calculateScale(strlen(m_nameLabel->getString()), 7, 15, 0.75F, 0.4F));
         }
-        m_fields->m_textArea->setString(m_nameLabel->getString());
-        m_nameLabel->setVisible(false);
-        m_fields->m_textArea->setScale(Utils::calculateScale(strlen(m_nameLabel->getString()), 7, 15, 0.75F, 0.4F));
 
         int levelID = level->m_levelID.value();
         if ((levelID <= 22) ||
@@ -461,8 +468,8 @@ class $modify(LevelPage) {
             (levelID >= 4001 && levelID <= 4003) && levelID > 0 && Mod::get()->getSettingValue<bool>("level-preview")) {
             m_fields->levelBG->removeAllChildrenWithCleanup(true);
 
-            std::string spriteName = fmt::format("{}.png"_spr, levelID);
-            if (levelID == 22) {
+            std::string spriteName = fmt::format("{}{}.png"_spr, levelID, (willOvercharge) ? "" : "-h");
+            if (levelID == 22 && willOvercharge) {
                 // lets hope this isnt against index rules!
                 if (auto gm = GameManager::sharedState()) {
                     if (gm->m_playerName == "Colon") {
@@ -471,7 +478,7 @@ class $modify(LevelPage) {
                 }
             }
             if (GameStatsManager::sharedState()->getStat("8") < m_level->m_requiredCoins) {
-                spriteName = fmt::format("{}barely.png"_spr, levelID);
+                spriteName = fmt::format("{}barely{}.png"_spr, levelID, (willOvercharge) ? "" : "-h");
             }
             /*
             auto spriteFrame = CCTextureCache::sharedTextureCache()->textureForKey(spriteName.c_str());
@@ -482,12 +489,12 @@ class $modify(LevelPage) {
 */
             auto sprite = CCSprite::create(spriteName.c_str());
             if (sprite != nullptr) {
-                sprite->setOpacity(150);
+                sprite->setOpacity((willOvercharge) ? 150 : 200);
                 m_fields->levelBG->addChildAtPosition(sprite, Anchor::Center);
             }
 
         }
-       
+        if (!willOvercharge) return;
         auto achievementID1 = fmt::format("geometry.ach.level{:02}a", levelID);
         auto achievementID2 = fmt::format("geometry.ach.level{:02}b", levelID);
         if (Loader::get()->isModLoaded("bitz.moregames")) {
@@ -496,55 +503,40 @@ class $modify(LevelPage) {
                 case 1001:
                     m_fields->m_textArea1Desc->setString("Complete This Level In Normal Mode");
                     m_fields->m_textAreaDesc->setString("Collect all 3 Secret Coins on 'The Seven Seas'");
-                    
-     
                     achievementID1 = "geometry.ach.mdlevel01b"; //Normal Mode achievement
-                  
                     achievementID2 = "geometry.ach.mdcoin01"; //3 Coins achievement
                     break;
                 case 1002:
                     m_fields->m_textArea1Desc->setString("Complete This Level In Normal Mode"); //1st achievement label
                     m_fields->m_textAreaDesc->setString("Collect all 3 Secret Coins on 'Viking Arena'"); //2st achievement label
-                    
                     achievementID1 = "geometry.ach.mdlevel02b"; //Normal Mode achievement
-
                     achievementID2 = "geometry.ach.mdcoin02"; //3 Coins achievement
                     break;
                 case 1003:
                     m_fields->m_textArea1Desc->setString("Complete This Level In Normal Mode"); //1st achievement label
                     m_fields->m_textAreaDesc->setString("Collect all 3 Secret Coins on 'Airborne Robots'");  //2st achievement label
-
                     achievementID1 = "geometry.ach.mdlevel03b"; //Normal Mode achievement
-
                     achievementID2 = "geometry.ach.mdcoin03"; //3 Coins achievement
                     break;
                 case 4001:
                     m_fields->m_textArea1Desc->setString("Complete This Level In Normal Mode"); //1st achievement label
                     m_fields->m_textAreaDesc->setString("Collect all 3 Secret Coins on 'Press Start'");  //2st achievement label
-                   
                     achievementID1 = "geometry.ach.subzero.level001"; //Normal Mode achievement
-
                     achievementID2 = "geometry.ach.subzero.coins001"; //3 Coins achievement
                     break;
                 case 4002:
                     m_fields->m_textArea1Desc->setString("Complete This Level In Normal Mode"); //1st achievement label
                     m_fields->m_textAreaDesc->setString("Collect all 3 Secret Coins on 'Nock Em'");  //2st achievement label
-                    
                     achievementID1 = "geometry.ach.subzero.level002"; //Normal Mode achievement
-
                     achievementID2 = "geometry.ach.subzero.coins002"; //3 Coins achievement
                     break;
                 case 4003:
                     m_fields->m_textArea1Desc->setString("Complete This Level In Normal Mode"); //1st achievement label
                     m_fields->m_textAreaDesc->setString("Collect all 3 Secret Coins on 'Power Trip'");  //2st achievement label
-                    
                     achievementID1 = "geometry.ach.subzero.level003"; //Normal Mode achievement
-
                     achievementID2 = "geometry.ach.subzero.coins003"; //3 Coins achievement
                     break;
              }
-
-          
         }
         if (auto am = AchievementManager::sharedState()) {
             if (level->m_levelID.value() > 0) {
