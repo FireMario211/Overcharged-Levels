@@ -1,5 +1,5 @@
 {
-	"geode": "4.2.0",
+	"geode": "4.3.1",
 	"gd": {
 		"win": "2.2074",
 		"android": "2.2074",
@@ -11,41 +11,41 @@
 	"version": "v1.2.0",
 	"developer": "Firee",
 	"description": "A revamp of the UI for the official main levels menu!",
-    "resources": {
-        "sprites": [
-            "resources/vertical/*.png",
-            "resources/horizontal/*.png"
-        ]
-    },
-    "links": {
-        "community": "https://discord.gg/XGBMVVvJ7J",
-        "source": "https://github.com/FireMario211/Overcharged-Levels"
-    },
-    "tags": ["interface", "offline", "modtober24"],
-    "settings": {
-        "enabled": {
-            "type": "bool",
-            "name": "Enabled",
-            "description": "Whether or not the mod should change the Main Levels menu.",
-            "default": true
-        },
-        "overcharge-menu": {
-            "type": "bool",
-            "name": "Overcharge Menu",
-            "description": "If the mod should revamp the look for the Main Levels menu. Turning this off won't disable features such as level preview or page icons.",
-            "default": true
-        },
-        "level-preview": {
-            "type": "bool",
-            "name": "Show Level Preview",
-            "description": "If the mod should show a preview of the level. Turn this off if you are experiencing lag.",
-            "default": true
-        },
-        "page-icons": {
-            "type": "bool",
-            "name": "Show Difficulty Icons",
-            "description": "If the mod should replace the dots with difficulty faces for the page icons, and should make them clickable.",
-            "default": true
-        }
-    }
+	"resources": {
+		"sprites": [
+			"resources/vertical/*.png",
+			"resources/horizontal/*.png"
+		]
+	},
+	"links": {
+		"community": "https://discord.gg/XGBMVVvJ7J",
+		"source": "https://github.com/FireMario211/Overcharged-Levels"
+	},
+	"tags": ["interface", "offline", "modtober24"],
+	"settings": {
+		"enabled": {
+			"type": "bool",
+			"name": "Enabled",
+			"description": "Whether or not the mod should change the Main Levels menu.",
+			"default": true
+		},
+		"overcharge-menu": {
+			"type": "bool",
+			"name": "Overcharge Menu",
+			"description": "If the mod should revamp the look for the Main Levels menu. Turning this off won't disable features such as level preview or page icons.",
+			"default": true
+		},
+		"level-preview": {
+			"type": "bool",
+			"name": "Show Level Preview",
+			"description": "If the mod should show a preview of the level. Turn this off if you are experiencing lag.",
+			"default": true
+		},
+		"page-icons": {
+			"type": "bool",
+			"name": "Show Difficulty Icons",
+			"description": "If the mod should replace the dots with difficulty faces for the page icons, and should make them clickable.",
+			"default": true
+		}
+	}
 }
