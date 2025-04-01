@@ -1,3 +1,5 @@
+# 1.2.1
+- Support Sapphire SDK
 # 1.2.0 
 - Added horizontal preview support (disable Overcharged in settings for that)
 # 1.1.3
