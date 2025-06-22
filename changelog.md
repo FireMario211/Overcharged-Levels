@@ -1,3 +1,5 @@
+# 1.2.2
+- Bump geode version
 # 1.2.1
 - Support Sapphire SDK
 # 1.2.0 
