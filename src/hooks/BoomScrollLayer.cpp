@@ -27,14 +27,24 @@ class $modify(OLBoomScrollLayer, BoomScrollLayer) {
                             }
                             auto texture = (GameStatsManager::sharedState()->getStat("8") < level->m_requiredCoins) ? "GJLargeLock_001.png" : fmt::format("diffIcon_{:02}_btn_001.png",difficulty);
                             CCSprite* dot;
-                            if (i >= dynamicObjects->count() - 2) {
-                                dot = CCSprite::create("smallDot.png");
-                            } else {
-                                dot = CCSprite::createWithSpriteFrameName(texture.c_str());
-                                if (!strcmp(texture.c_str(), "GJLargeLock_001.png")) {
-                                    dot->setScale(0.15F);
+                            // assume more games
+                            if (dynamicObjects->count() == 4) {
+                                if (i >= 3) {
+                                    dot = CCSprite::create("smallDot.png");
                                 } else {
+                                    dot = CCSprite::createWithSpriteFrameName(texture.c_str());
                                     dot->setScale(0.35F);
+                                }
+                            } else {
+                                if (i >= dynamicObjects->count() - 2) {
+                                    dot = CCSprite::create("smallDot.png");
+                                } else {
+                                    dot = CCSprite::createWithSpriteFrameName(texture.c_str());
+                                    if (!strcmp(texture.c_str(), "GJLargeLock_001.png")) {
+                                        dot->setScale(0.15F);
+                                    } else {
+                                        dot->setScale(0.35F);
+                                    }
                                 }
                             }
                             auto dotBtn = CCMenuItemSpriteExtra::create(dot, this, menu_selector(OLBoomScrollLayer::goToPage));
