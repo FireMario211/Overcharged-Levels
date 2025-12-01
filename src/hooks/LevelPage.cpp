@@ -121,6 +121,7 @@ class $modify(LevelPage) {
 
         m_levelDisplay->setPosition({m_levelDisplay->getContentSize() / 2});
         auto playBtnD = CCMenuItemSpriteExtra::create(sprite, nullptr, this, menu_selector(LevelPage::onPlay));
+        playBtnD->setID("level-button");
         //playBtn->m_scaleMultiplier = 1.1F;
         playBtnD->setEnabled(false);
         //playBtnD->setVisible(false);
@@ -272,13 +273,6 @@ class $modify(LevelPage) {
         }
         
         m_fields->m_textArea = TextArea::create(" ", "bigFont.fnt", 1.0F, 300.F, {0.5, 0.5}, 30.F, true);
-        /*
-        for (size_t i = 0; i < textArea->m_label->getChildrenCount(); i++) {
-            if (auto label = typeinfo_cast<CCLabelBMFont*>(textArea->m_label->getChildren()->objectAtIndex(i))) {
-                label->setAnchorPoint({0.5, 0.5});
-            }
-        }
-        */
         m_fields->m_textArea->setID("level-name-label");
         m_fields->m_textArea->setScale(0.45F);
         m_levelDisplay->addChildAtPosition(m_fields->m_textArea, Anchor::Top, {0, -23});
@@ -297,7 +291,6 @@ class $modify(LevelPage) {
         achievementLabel->setAnchorPoint({0.5, 1.0});
         achievementLabel->setScale(0.425F);
         achievementDisplay->addChildAtPosition(achievementLabel, Anchor::Top, {0, -5});
-
 
         if (auto gm = GameManager::sharedState()) {
             auto achievement1Display = CCScale9Sprite::create("square02_001.png", {0, 0, 80, 80});
@@ -349,98 +342,6 @@ class $modify(LevelPage) {
             m_fields->achievement2Display->addChildAtPosition(m_fields->achievement2Icon, Anchor::Right, {-25, 0});
         }
 
-        // i really just wasted hours doing this
-        /*
-        int segments = 10;
-        float radius = 8.0F; //8
-        auto size = m_levelDisplay->getContentSize();
-        
-        auto mask = CCDrawNode::create();
-        mask->setAnchorPoint({0.5, 0.5});
-        auto color = ccc4FFromccc3B({1,1,1});
-
-        float offset = 0.F;
-        CCPoint rectVertices[4] = {
-            ccp(offset, offset),
-            ccp(offset, size.height - offset),
-            ccp(size.width - offset, size.height - offset),
-            ccp(size.width - offset, offset)
-        };
-
-        float otherOffsetX = offset + 22.F;
-        float otherOffsetY = offset + 10.F;
-        CCPoint rectVertices1[4] = {
-            ccp(offset, offset + otherOffsetY),
-            ccp(offset, (size.height - offset) - otherOffsetY),
-            ccp(offset + otherOffsetX, (size.height - offset) - otherOffsetY),
-            ccp(offset + otherOffsetX, offset + otherOffsetY),
-        };
-
-        CCPoint rectVertices2[4] = {
-            ccp((size.width - offset), offset + otherOffsetY),
-            ccp((size.width - offset), (size.height - offset) - otherOffsetY),
-            ccp((size.width - offset) - otherOffsetX, (size.height - offset) - otherOffsetY),
-            ccp((size.width - offset) - otherOffsetX, offset + otherOffsetY),
-        };
-
-        CCPoint rectVertices3[4] = {
-            ccp(offset + otherOffsetX - 5.F, offset),
-            ccp(offset + otherOffsetX - 5.F, size.height - offset),
-            ccp((size.width - offset) - otherOffsetX + 5.F, size.height - offset),
-            ccp((size.width - offset) - otherOffsetX + 5.F, offset),
-        };
-
-        //mask->drawPolygon(rectVertices1, 4, color, 0.f, color);
-        //mask->drawPolygon(rectVertices2, 4, color, 0.f, color);
-        //mask->drawPolygon(rectVertices3, 4, color, 0.f, color);
-
-        float angleStep = M_PI * 0.5f / segments;
-
-        offset = offset + 16.9F;
-        for (int corner = 0; corner < 4; ++corner) {
-            float startAngle;
-            CCPoint startPoint;
-            CCPoint lastPoint;
-            
-            switch(corner) {
-                case 0: // Top-left
-                    startAngle = M_PI * 0.5f; // 90 degrees, pointing down
-                    startPoint = ccp(offset, size.height - offset); // Adjust to top-left
-                    break;
-                case 1: // Top-right
-                    startAngle = 0; // 0 degrees, pointing right
-                    startPoint = ccp(size.width - offset, size.height - offset); // Adjust to top-right
-                    break;
-                case 2: // Bottom-right
-                    startAngle = -M_PI * 0.5f; // -90 degrees, pointing up
-                    startPoint = ccp(size.width - offset, offset); // Adjust to bottom-right
-                    break;
-                case 3: // Bottom-left
-                    startAngle = M_PI; // 180 degrees, pointing left
-                    startPoint = ccp(offset, offset); // Adjust to bottom-left
-                    break;
-            }
-            for (int i = 0; i <= segments; ++i) {
-                float angle = startAngle + i * angleStep;
-                CCPoint point = {
-                    startPoint.x + radius * cos(angle),
-                    startPoint.y + radius * sin(angle)
-                };
-                
-                if (i > 0) {
-                    mask->drawSegment(lastPoint, point, radius, color);
-                }
-                lastPoint = point;
-            }
-        }*/
-        /*mask->drawCircle(ccp(cornerRadius + cornerOffset, cornerRadius + cornerOffset), cornerRadius, color, 0.f, color, segments);
-        mask->drawCircle(ccp(cornerRadius + cornerOffset, (size.height - offset) - (cornerRadius + cornerOffset)), cornerRadius, color, 0.f, color, segments);
-        mask->drawCircle(ccp((size.width - offset) - (cornerRadius + cornerOffset), (size.height - offset) - (cornerRadius + cornerOffset)), cornerRadius, color, 0.f, color, segments);
-        mask->drawCircle(ccp((size.width - offset) - (cornerRadius + cornerOffset), cornerRadius + cornerOffset), cornerRadius, color, 0.f, color, segments);*/
-
-
-        //CCLayerColor* mask = CCLayerColor::create({255, 255, 255});
-        //mask->setContentSize(m_levelDisplaySize);
         createClippingNode();
 		return true;
     }

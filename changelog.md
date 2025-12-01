@@ -1,3 +1,5 @@
+# 1.2.4
+- Fix GDDL crashing if viewing demon level
 # 1.2.3
 - Bump geode version
 - Fix icons not replacing the dots
