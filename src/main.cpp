@@ -1,16 +1,9 @@
 #include "utils.hpp"
 
-bool doTogglePracticeMode = false;
+bool s_doTogglePracticeMode = false;
 void Utils::setPractice(bool value) {
-    doTogglePracticeMode = value;
+    s_doTogglePracticeMode = value;
 }
 bool Utils::isPractice() {
-    return doTogglePracticeMode;
+    return s_doTogglePracticeMode;
 }
-/*
-$execute {
-    listenForSettingChanges("enabled", +[](bool value) {
-        enableMod = value;
-    });
-}
-*/

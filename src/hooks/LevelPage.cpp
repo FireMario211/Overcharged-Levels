@@ -21,7 +21,7 @@ using namespace geode::prelude;
 
 class $modify(LevelPage) {
     static void onModify(auto& self) {
-        if (!self.setHookPriority("LevelPage::init", 0x8008135)) { // 0x100001, doggo suggested this for some reason
+        if (!self.setHookPriority("LevelPage::init", Priority::EarlyPost)) { // 0x100001, doggo suggested this for some reason
             log::warn("Failed to set hook priority.");
         }
         if (Loader::get()->isModLoaded("uproxide.more_difficulties")) {
@@ -47,6 +47,7 @@ class $modify(LevelPage) {
         auto clippingNode = CCClippingNode::create();
         clippingNode->setContentSize(m_levelDisplaySize);
         clippingNode->setAnchorPoint({0.5, 0.5});
+        clippingNode->setID("background");
 
         auto mask2 = CCScale9Sprite::create("square02_001.png", {0, 0, 80, 80});
         mask2->setAnchorPoint({0.5, 0.5});
@@ -65,7 +66,6 @@ class $modify(LevelPage) {
 
         m_levelDisplay->updateLayout();
         clippingNode->setAnchorPoint({0, 0});
-
 
         auto moveAround = CCSequence::create(
             CCEaseInOut::create(CCMoveBy::create(1.5f, ccp(0, 3)), 2.0f),
@@ -99,12 +99,14 @@ class $modify(LevelPage) {
         m_progressObjects->retain();
         m_levelObjects->retain();
         m_levelMenu = CCMenu::create();
+        m_levelMenu->setID("level-menu");
         //m_levelDisplaySize = ccp(340.F, 95.F);
         m_levelDisplaySize = ccp(135.F, 210.F);
         m_levelMenu->setPosition({(winSize.width / 2) - 203.F, (winSize.height / 2) - 105.F});
         this->addChild(m_levelMenu, -1);
 
         m_levelDisplay = CCScale9Sprite::create("square02_001.png", {0, 0, 80, 80});
+        m_levelDisplay->setID("scale-9-sprite");
         if (Mod::get()->getSettingValue<bool>("level-preview")) {
             m_levelDisplay->setOpacity(0);
         } else {
@@ -113,6 +115,7 @@ class $modify(LevelPage) {
         m_levelDisplay->setContentSize(m_levelDisplaySize);
         m_levelDisplay->setPosition({winSize.width / 2, (winSize.height / 2) + 50.F});
         auto sprite = CCSprite::create();
+        sprite->setID("white-sprite");
         sprite->addChild(m_levelDisplay);
         sprite->setContentSize(m_levelDisplay->getContentSize());
 
@@ -133,6 +136,8 @@ class $modify(LevelPage) {
             Utils::setPractice(true);
             LevelPage::onPlay(sender);
         });
+        playBtn->setID("level-play-button");
+        practiceBtn->setID("level-practice-button");
 
         if (Loader::get()->isModLoaded("dankmeme.globed2")) {
             playBtn->setPosition({43, 40});
@@ -150,6 +155,7 @@ class $modify(LevelPage) {
         progressDisplay->setOpacity(75);
         progressDisplay->setContentSize({260.F, 70.F});
         progressDisplay->setPosition({(winSize.width / 2) + 70.F, (winSize.height / 2) + 70.F});
+        progressDisplay->setID("level-progress-display");
         this->addChild(progressDisplay, 3);
         m_progressObjects->addObject(progressDisplay);
 
@@ -157,13 +163,13 @@ class $modify(LevelPage) {
         normProgressBar->setColor({0,0,0});
         normProgressBar->setOpacity(125);
         normProgressBar->setScale(0.7F);
+        normProgressBar->setID("normal-progress-bar");
         progressDisplay->addChildAtPosition(normProgressBar, Anchor::Center, {0, 8});
 
         m_normalProgressBar = CCSprite::create("GJ_progressBar_001.png");
         m_normalProgressBar->setScaleX(0.992F);
         m_normalProgressBar->setScaleY(0.825F);
         m_normalProgressBar->setColor({0,255,0});
-        m_normalProgressBar->setID("normal-progress-bar");
         m_progressWidth = m_normalProgressBar->getTextureRect().size.width;
         normProgressBar->addChild(m_normalProgressBar, 1);
         m_normalProgressBar->setAnchorPoint({0, 0.5});
@@ -175,13 +181,13 @@ class $modify(LevelPage) {
         practProgressBar->setColor({0,0,0});
         practProgressBar->setOpacity(125);
         practProgressBar->setScale(0.7F);
+        practProgressBar->setID("practice-progress-bar");
         progressDisplay->addChildAtPosition(practProgressBar, Anchor::Center, {0, -22});
 
         m_practiceProgressBar = CCSprite::create("GJ_progressBar_001.png");
         m_practiceProgressBar->setScaleX(0.992F);
         m_practiceProgressBar->setScaleY(0.825F);
         m_practiceProgressBar->setColor({0,255,255});
-        m_practiceProgressBar->setID("practice-progress-bar");
         practProgressBar->addChild(m_practiceProgressBar, 1);
         m_practiceProgressBar->setAnchorPoint({0, 0.5});
         m_practiceProgressBar->setPosition({m_normalProgressBar->getPositionX(), practProgressBar->getContentHeight() / 2});
@@ -233,12 +239,14 @@ class $modify(LevelPage) {
 
         m_starsSprite = CCSprite::createWithSpriteFrameName("GJ_starsIcon_001.png");
         m_starsSprite->setScale(0.375F);
+        m_starsSprite->setID("stars-icon");
         m_levelDisplay->addChildAtPosition(m_starsSprite, Anchor::Center, {5, 3});
         m_levelObjects->addObject(m_starsSprite);
 
         m_starsLabel = CCLabelBMFont::create(" ","bigFont.fnt");
         m_starsLabel->setScale(0.3F);
         m_starsLabel->setAnchorPoint({1.0, 0.5});
+        m_starsLabel->setID("stars-label");
         m_levelDisplay->addChildAtPosition(m_starsLabel, Anchor::Center, {-2, 3});
         m_levelObjects->addObject(m_starsLabel);
 
@@ -248,6 +256,7 @@ class $modify(LevelPage) {
         for (int i = 0; i < 3; i++) {
             auto coin = CCSprite::createWithSpriteFrameName("GJ_coinsIcon_001.png");
             coin->setScale(0.75F);
+            coin->setID(fmt::format("secret-coin-icon-{}",i+1));
             m_levelDisplay->addChildAtPosition(coin, Anchor::Center, {((i) * 18.5F) - 18.F, -13});
             m_coins->addObject(coin);
             m_levelObjects->addObject(coin);
@@ -270,6 +279,7 @@ class $modify(LevelPage) {
             }
         }
         */
+        m_fields->m_textArea->setID("level-name-label");
         m_fields->m_textArea->setScale(0.45F);
         m_levelDisplay->addChildAtPosition(m_fields->m_textArea, Anchor::Top, {0, -23});
         m_fields->m_textArea->setScale(Utils::calculateScale(strlen(m_nameLabel->getString()), 10, 25, 0.75F, 0.4F));
@@ -279,6 +289,7 @@ class $modify(LevelPage) {
         achievementDisplay->setOpacity(75);
         achievementDisplay->setContentSize({260.F, 130.F});
         achievementDisplay->setPosition({(winSize.width / 2) + 70.F, (winSize.height / 2) - 40.F});
+        achievementDisplay->setID("level-achievements-display");
         this->addChild(achievementDisplay, 3);
         m_progressObjects->addObject(achievementDisplay);
 
@@ -541,7 +552,7 @@ class $modify(LevelPage) {
         if (auto am = AchievementManager::sharedState()) {
             if (level->m_levelID.value() > 0) {
                 if (auto gm = GameManager::sharedState()) {
-                    if (auto achievementData = as<CCDictionary*>(am->m_platformAchievements->objectForKey(achievementID1))) {
+                    if (auto achievementData = static_cast<CCDictionary*>(am->m_platformAchievements->objectForKey(achievementID1))) {
                         auto achievementTitle = achievementData->valueForKey("title")->getCString();
                         if (GameStatsManager::sharedState()->getStat("8") < m_level->m_requiredCoins) {
                             achievementTitle = "???";
@@ -607,7 +618,7 @@ class $modify(LevelPage) {
                         m_fields->achievement1Icon->addChildAtPosition(lock, Anchor::Center);
                         m_fields->achievement1Icon->setOpacity(255);
                     }
-                    if (auto achievementData = as<CCDictionary*>(am->m_platformAchievements->objectForKey(achievementID2))) {
+                    if (auto achievementData = static_cast<CCDictionary*>(am->m_platformAchievements->objectForKey(achievementID2))) {
                         auto achievementTitle = achievementData->valueForKey("title")->getCString();
                         if (GameStatsManager::sharedState()->getStat("8") < m_level->m_requiredCoins) {
                             achievementTitle = "???";

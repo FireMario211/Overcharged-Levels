@@ -1,3 +1,7 @@
+# 1.2.3
+- Bump geode version
+- Fix icons not replacing the dots
+- Fix IDs not being set correctly for Node IDs
 # 1.2.2
 - Bump geode version
 # 1.2.1
