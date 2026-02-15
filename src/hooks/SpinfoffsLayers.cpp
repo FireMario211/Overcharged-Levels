@@ -8,7 +8,7 @@ class $modify(CCLayer) {
     bool init() {
         if (!CCLayer::init()) return false;
         if (typeinfo_cast<SubZeroSelectLayer*>(this) || typeinfo_cast<MeltdownSelectLayer*>(this)) {
-            queueInMainThread([=] {
+            queueInMainThread([this] {
                 if (auto ground = typeinfo_cast<GJGroundLayer*>(this->getChildByID("GJGroundLayer"))) {
                     ground->setPositionY(35);
                 }
