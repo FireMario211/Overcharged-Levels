@@ -1,3 +1,5 @@
+# 1.2.6
+- Bump geode version
 # 1.2.5
 - Bump geode version
 # 1.2.4
