@@ -272,7 +272,7 @@ class $modify(LevelPage) {
             m_levelObjects->addObject(controllerBtn);
         }
         
-        m_fields->m_textArea = TextArea::create(" ", "bigFont.fnt", 1.0F, 300.F, {0.5, 0.5}, 30.F, true);
+        m_fields->m_textArea = TextArea::create(" ", "bigFont.fnt", 1.0F, 300.F, {0.5, 0.5}, 30.F, true, 0);
         m_fields->m_textArea->setID("level-name-label");
         m_fields->m_textArea->setScale(0.45F);
         m_levelDisplay->addChildAtPosition(m_fields->m_textArea, Anchor::Top, {0, -23});
@@ -302,7 +302,7 @@ class $modify(LevelPage) {
             m_fields->achievement1Title = CCLabelBMFont::create(" ", "goldFont.fnt");
             m_fields->achievement1Title->setScale(0.575F);
             m_fields->achievement1Title->setAnchorPoint({0, 0.5});
-            m_fields->m_textArea1Desc = TextArea::create("Complete This Level In Practice Mode", "bigFont.fnt", 0.4F, 200.F, {0, 0.5}, 15.F, true);
+            m_fields->m_textArea1Desc = TextArea::create("Complete This Level In Practice Mode", "bigFont.fnt", 0.4F, 200.F, {0, 0.5}, 15.F, true, 0);
             m_fields->m_textArea1Desc->setAnchorPoint({0, 0.5});
             achievement1Display->addChildAtPosition(m_fields->achievement1Title, Anchor::TopLeft, {9, -11});
             achievement1Display->addChildAtPosition(m_fields->m_textArea1Desc, Anchor::Left, {9, 2});
@@ -326,7 +326,7 @@ class $modify(LevelPage) {
             m_fields->achievement2Title->setScale(0.575F);
             m_fields->achievement2Title->setAnchorPoint({0, 0.5});
 
-            m_fields->m_textAreaDesc = TextArea::create("Complete This Level In Normal Mode", "bigFont.fnt", 0.4F, 200.F, { 0, 0.5 }, 15.F, true);
+            m_fields->m_textAreaDesc = TextArea::create("Complete This Level In Normal Mode", "bigFont.fnt", 0.4F, 200.F, { 0, 0.5 }, 15.F, true, 0);
             m_fields->m_textAreaDesc->setAnchorPoint({0, 0.5});
             m_fields->achievement2Display->addChildAtPosition(m_fields->achievement2Title, Anchor::TopLeft, {9, -11});
 

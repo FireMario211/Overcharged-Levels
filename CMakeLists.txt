@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-if(DEFINED ENV{OSXCROSS})
+if(DEFINED ENV{SCCACHE_ARGS})
     message(STATUS "Skipping to set OSX Arch because we are compiling with docker!!!")
 else()
     if ("${GEODE_TARGET_PLATFORM}" STREQUAL "iOS" OR IOS)
