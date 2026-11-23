@@ -38,7 +38,7 @@ jobs:
           build-config: 'RelWithDebInfo'
           export-pdb: true
           upload: true
-          sdk: 6.0.0-beta.1
+          sdk: 6.0.0-beta.2
           target: ${{ matrix.config.target }}
 
   package:
